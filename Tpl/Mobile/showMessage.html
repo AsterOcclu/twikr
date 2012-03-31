@@ -1,0 +1,25 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+<eq name="Think.ACTION_NAME" value="sendmessage">
+	<include file="Mobile:user_header" />
+</eq>
+<include file="Mobile:form" />
+<present name="message">
+<?php
+	if($message->recipient_screen_name == session('screen_name')) {
+		$isInbox = true;
+	}
+	else {
+		$isInbox = false;
+	}
+?>
+
+<div class="timeline_header">
+	<a href="__APP__/messages">收件箱</a>
+	<a href="__APP__/messages/sent">发件箱</a>
+</div>
+<div class="status">
+<include file="Mobile:message" />
+</div>
+</present>
+<include file="Mobile:footer" />

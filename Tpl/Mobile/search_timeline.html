@@ -1,0 +1,76 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+<include file="Mobile:tl_header" />
+<div class="timeline">
+	<?php
+		if (isset($response)) {
+			$isSearchHelp = false;
+			$query    = isset($response->query) ? urldecode($response->query) : '';
+			$statuses = isset($response->results) ? $response->results : array();
+		}
+		else {
+			$isSearchHelp = true;
+		}
+	?>
+	<div class="search_form field">
+		<form action="__APP__/search">
+		<input type="text" name="q" value="{$query}" placeholder="搜索..." />
+		<input type="submit" value="搜索" class="btn" />
+		</form>
+	</div>
+
+<neq name="isSearchHelp" value="0">
+	<div class="search_help">
+	    <h3>搜索操作符</h3>
+	  <table class="border4">
+	  <thead>
+	    <tr>
+	      <th>运算符</th>
+	      <th>查找推文...</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr><td>推特 搜索</td><td>同时含有“推特”与“搜索”。这是默认运算符。</td></tr>
+	    <tr><td><b>“</b>和谐社会<b>”</b></td><td>包含“和谐社会”的完整短语。</td></tr>
+	    <tr><td>爱 <b>OR</b> 恨</td><td>包含"爱"或“恨”（或两者都有）。</td></tr>
+	    <tr><td>麻婆 <b>-</b>豆腐</td><td>包含“麻婆”但不含“豆腐”。</td></tr>
+	    <tr><td><b>#</b>俳句</td><td>包含话题“俳句”。</td></tr>
+	    <tr><td><b>from:</b>alexiskold</td><td>发自用户“alexiskold”。</td></tr>
+	    <tr><td><b>to:</b>techcrunch</td><td>发送给用户“techcrunch”。</td></tr>
+	    <tr><td><b>@</b>mashable</td><td>引用用户“mashable”。</td></tr>
+	    <tr><td>"happy hour" <b>near:</b>"san francisco"</td><td>包含“happy hour”完整短语且在“san francisco”附近发布。</td></tr>
+	    <tr><td><b>near:</b>纽约 <b>within:</b>15mi</td><td>在纽约方圆15英里以内发送的。</td></tr>
+	    <tr><td>超级英雄 <b>since:</b>2010-12-27</td><td>包含“超级英雄”且发送时间晚于日期“2010-12-27” (年-月-日)。</td></tr>
+	    <tr><td>足球 <b>until:</b>2010-12-27</td><td>包含“足球”且发送时间早于日期“2010-12-27”。</td></tr>
+	    <tr><td>电影 -恐怖 <b>:)</b></td><td>包含“电影”但不包含“恐怖”，且积极。</td></tr>
+	    <tr><td>航班 <b>:(</b></td><td>包含“航班”且消极。</td></tr>
+	    <tr><td>交通 <b>?</b></td><td>包含“交通”的提问。</td></tr>
+	    <tr><td>搞笑 <b>filter:links</b></td><td>包含“搞笑”且带有链接。</td></tr>
+	    <tr><td>新闻 <b>source:twitterfeed</b></td><td>包含“新闻”且通过 TwitterFeed 发布</td></tr>
+	  </tbody>
+	</table>
+	</div>
+<else />
+	<a class="search_help" href="__APP__/search">高级搜索</a>
+	<empty name="statuses">
+		<h3 class="search_help">
+			没有搜索到推文，请使用更合适的关键词重试。╮(╯_╰)╭
+		</h3>
+	<else />
+	<ol>
+
+	<volist name="statuses" id="status">
+
+	<li>
+	<include file="Mobile:search" />
+	</li>
+
+	</volist>
+
+	</ol>
+
+	<div class="page_nav">{$page_show}</div>
+	</empty>
+</neq>
+</div>
+<include file="Mobile:footer" />

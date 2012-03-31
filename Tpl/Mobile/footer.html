@@ -1,0 +1,31 @@
+<present name="profile_footer">
+	<div class="profile_footer">
+		<span class="left">
+			<a href="__APP__/search" <if condition="(ACTION_NAME eq 'search') OR (ACTION_NAME eq 'mentions') "> class="selected" </if>>搜索</a>
+			<a href="__APP__/settings" <eq name="Think.ACTION_NAME" value="settings">class="selected" </eq>>设置</a>
+			<a href="__APP__/about" <eq name="Think.ACTION_NAME" value="about">class="selected" </eq>>关于</a>
+			<a href="__APP__/logout">登出</a>
+		</span>
+		<span class="right">
+			<?php 
+				$avatar_url = IS_HTTPS ? $profile_footer['avatar_https'] : $profile_footer['avatar_http'];
+				$mini_avatar_url = strtr($avatar_url, array('_normal.' => '_mini.'));
+			?>
+			<a href="__APP__/profile" <eq name="Think.ACTION_NAME" value="profile">class="selected" </eq>>修改个人资料</a>
+			<a href="__APP__/{$myself_name}">@{$myself_name}</a>
+			<a class="profile_avater" href="__APP__/{$myself_name}/info"><img src="{$mini_avatar_url}" alt="{$profile_footer.name}" class="size24" /></a>
+		</span>
+		<present name="page_show">
+		<?php
+			$page_show = strtr($page_show, array('上一页' => '<<', '下一页' => '>>'));
+		?>
+		<div class="page_nav_footer">
+			{$page_show}
+			<span>© 2012 - DOOMSDAY 推客</span>
+		</div>
+		</present>
+	</div>
+</present>
+</div>
+</body>
+</html>

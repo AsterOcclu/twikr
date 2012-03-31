@@ -1,0 +1,25 @@
+<?php
+  $user       = $list_info->user;
+  $avatar_url = IS_HTTPS ? $user->profile_image_url_https : $user->profile_image_url;
+  $show_user_header = false;
+  $list       = $list_info;
+?>
+  <div class="user_header list_header">
+    <div class="list_content">
+      <div>
+        <a href="__APP__/{$user:screen_name}/{$list:slug}"><strong>{$list:name}</strong></a>
+        <span class="list_user">由 <a href="__APP__/{$user:screen_name}">@{$user:screen_name} ({$user:name})</a> 创建</span>
+        <neq name="user:screen_name" value="$myself_name">
+          <eq name="list:following" value="0">
+            <a href="__APP__/{$user:screen_name}/{$list:slug}/followList">[订阅]</a>
+          <else />
+            <a href="__APP__/{$user:screen_name}/{$list:slug}/unfoList">[取消订阅]</a>
+          </eq>
+          <else />
+            <a href="__APP__/{$user:screen_name}/{$list:slug}/edit">[编辑]</a>
+            <a href="__APP__/{$user:screen_name}/{$list:slug}/deleteList">[删除]</a>
+        </neq>
+      </div>
+      <div class="bio">{$list:description}</div>
+    </div>
+  </div>

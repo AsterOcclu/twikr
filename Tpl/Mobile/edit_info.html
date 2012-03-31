@@ -1,0 +1,130 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+
+<div class="timeline_header">
+	<a href="__APP__">主页</a>
+	<a href="__APP__/replies">提及</a>
+	<a href="__APP__/favorites">收藏</a>
+	<a href="__APP__/retweet">转发</a>
+	<a href="__APP__/messages">私信</a>
+  <a <if condition="(ACTION_NAME eq 'lists') OR (MODULE_NAME eq 'List') "> class="selected" </if>href="__APP__/lists">列表</a>
+</div>
+<div class="timeline edit_info">
+<present name="isCreatList">
+<h2>创建一个新列表</h2>
+<form method="POST" action="__APP__/{$myself_name}/lists/new">
+<div class="editor">
+  <div class="field">
+    <label for="list_name">列表名称</label>
+    <input type="text" id="list_name" name="name" value="">
+  </div>
+  <div class="field">
+    <label for="description">描述</label>
+    <textarea name="description"></textarea>
+    <span class="help-text">少于 100 字符，可选</span>
+  </div>
+  <div class="field">
+    <label for="mode">隐私</label>
+    <div class="options">
+      <label for="list-public-radio">
+        <input class="radio" type="radio" name="mode" id="list-public-radio" value="public" checked="checked">
+        <b>公开</b> · 任何人都可以关注该列表
+      </label>
+      <br />
+      <label for="list-private-radio">
+        <input class="radio" type="radio" name="mode" id="list-private-radio" value="private">
+        <b>私密</b> · 只有你可以访问此列表
+      </label>
+    </div>
+  </div>
+  <div class="field">
+   <label for="members">添加成员</label>
+   <textarea name="members"></textarea>
+   <span class="help-text">可选，不包含@，以半角逗号分隔，少于100名用户</span>
+  </div>
+  <div class="editor-save">
+    <button class="btn">创建</button>
+  </div>
+</div>
+</form>
+</present>
+<present name="list_info">
+<h2>修改列表</h2>
+<form method="POST" action="__APP__/{$myself_name}/{$list_info:slug}/edit">
+<div class="editor">
+	<div class="field">
+		<label for="list_name">列表名称</label>
+		<input type="text" id="list_name" name="name" value="{$list_info:name}">
+	</div>
+  <div class="field">
+    <label for="description">描述</label>
+    <textarea name="description">{$list_info:description}</textarea>
+    <span class="help-text">少于 100 字符，可选</span>
+  </div>
+  <div class="field">
+    <label for="mode">隐私</label>
+    <div class="options">
+      <label for="list-public-radio">
+        <input class="radio" type="radio" name="mode" id="list-public-radio" value="public" checked="checked">
+        <b>公开</b> · 任何人都可以关注该列表
+      </label>
+      <br />
+      <label for="list-private-radio">
+        <input class="radio" type="radio" name="mode" id="list-private-radio" value="private">
+        <b>私密</b> · 只有你可以访问此列表
+      </label>
+    </div>
+  </div>
+  <div class="field">
+   <label for="members">添加成员</label>
+   <textarea name="members"></textarea>
+   <span class="help-text">可选，不包含@，以半角逗号分隔，少于100名用户</span>
+  </div>
+  <div class="editor-save">
+    <button class="btn">保存列表</button>
+  </div>
+</div>
+</form>
+</present>
+<present name="profile">
+<h2>修改个人资料</h2>
+<form method="POST" action="__APP__/profile" enctype="multipart/form-data">
+<div class="editor">
+  <div class="field avatar_field">
+    <label for="avatar">头像</label>
+    <?php
+      $avatar_url = IS_HTTPS ? $profile->profile_image_url_https : $profile->profile_image_url;
+    ?>
+    <img src="{$avatar_url}" alt="{$profile:name}" class="size48 border5"/>
+    <input type="file" id="avatar" name="avatar" />
+    <span class="help-text">最大尺寸为 700k。支持 JPG、GIF、PNG 格式。</span>
+  </div>
+  <div class="field">
+    <label for="name">姓名</label>
+    <input type="text" id="name" name="name" value="{$profile:name}" />
+    <span class="help-text">请输入真实姓名以便他人找到你。</span>
+  </div>
+  <div class="field">
+    <label for="location">位置</label>
+    <input type="text" id="location" name="location" value="{$profile:location}" />
+    <span class="help-text">你在世界上的什么地方?</span>
+  </div>
+  <div class="field">
+    <label for="url">网页</label>
+    <input type="text" id="url" name="url" value="{$profile:url}" />
+    <span class="help-text">你有一个主页或是博客? 把网址填在这里吧。</span>
+  </div>
+  <div class="field">
+    <label for="description">简介</label>
+    <textarea id="description" name="description">{$profile:description}</textarea>
+    <span class="help-text">用少于 160 个字符描述你自己。</span>
+  </div>
+  <div class="editor-save">
+    <button class="btn">保存更改</button>
+  </div>
+</div>
+</form>
+</present>
+</div>
+
+<include file="Mobile:footer" />

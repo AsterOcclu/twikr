@@ -1,0 +1,29 @@
+<include file="Mobile:header" />
+<style>
+.header{width:588px;padding-left:20px;margin:0 auto;text-align:left;background-color:#8ec1da;margin:0 5px;padding:6px 0;-webkit-border-bottom-left-radius:5px;-webkit-border-bottom-right-radius:5px;-moz-border-radius-bottomleft:5px;-moz-border-radius-bottomright:5px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;}
+.header .selected{color:#333;background-color:white;padding:1px 4px 1px 4px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+.index{text-align:center;}
+.big_logo{display:block;margin:50px auto 20px auto;width:500px;height:100px;}
+.login_btn{display:block;width:100px;margin:50px auto;}
+.index p{text-align:center;color:#777;margin:40px 0px;}
+</style>
+</head>
+<body>
+<div class="main">
+<div class="index">
+	<div class="header">
+		<a href="__APP__" class="selected">首页</a>
+		<a href="__APP__/about">关于</a>
+	</div>
+	<img class="big_logo" src="__IMG__/twikr_big_logo.png" alt="twikr" />
+	<form action="__APP__/Login">
+		<input type="submit" class="btn btn-large login_btn" value="登录" />
+	</form>
+	<p>
+	  登录采用OAuth 2.0授权方式，本站无法收集您的账户密码。
+	</p>
+	<p>
+	  如果您能够访问Twitter，可以<a href="__APP__/Login/d">点击这里</a>直接登录。
+	</p>
+</div>
+<include file="Mobile:footer" />

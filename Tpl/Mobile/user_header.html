@@ -1,0 +1,49 @@
+<?php
+	$avatar_url  = IS_HTTPS ? $user->profile_image_url_https : $user->profile_image_url;
+	if($user->screen_name == session('screen_name')) {
+		$relation_tips = '当前用户 - <a href="__APP__/'.$user->screen_name.'/unfo">修改个人信息</a>';
+		$can_dm = true;
+	}
+	else {
+		$relation = getTwitter()->relationship($user->screen_name);
+		if(isset($relation->relationship->source)) {
+			$source = $relation->relationship->source;
+			$can_dm = $source->can_dm;
+			if($source->blocking) {
+				$relation_tips = '已屏蔽 - <a href="__APP__/'.$user->screen_name.'/unblock">解除屏蔽</a>';
+				if($user->protected) $isProtected = true;
+			}
+			elseif($source->followed_by && $source->following) {
+				$relation_tips = '互相关注 - <a href="__APP__/'.$user->screen_name.'/unfoUser">取消关注</a>';
+			}
+			elseif($source->following) {
+				$relation_tips = '正在关注 - <a href="__APP__/'.$user->screen_name.'/unfoUser">取消关注</a>';
+			}
+			elseif($user->protected) {
+				$relation_tips = '受保护用户 - <a href="__APP__/'.$user->screen_name.'/followUser">请求关注</a>';
+				$isProtected   = true;
+			}
+			elseif($source->followed_by) {
+				$relation_tips = '关注了你 - <a href="__APP__/'.$user->screen_name.'/followUser">关注</a>';
+			}
+			else {
+				$relation_tips = '陌路人 - <a href="__APP__/'.$user->screen_name.'/followUser">关注</a>';
+			}
+			$relation_tips = "($relation_tips)";
+		}
+		else {
+			$relation_tips = '';
+			$can_dm = false;
+		}
+	}
+?>
+<neq name="show_user_header" value="0">
+	<div class="user_header">
+		<a href="__APP__/{$user:screen_name}/info"><img src="{$avatar_url}" alt="{$user:name}"></a>
+		<span class="user_header_name">
+			<span class="name">&nbsp;&nbsp;{$user:name}</span>
+			<a class="screen_name" href="__APP__/{$user:screen_name}">@{$user:screen_name}</a>
+			<span class="relation_tips">&nbsp;&nbsp;{$relation_tips}</span>
+		</span>
+	</div>
+</neq>

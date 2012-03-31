@@ -1,0 +1,82 @@
+<include file="Mobile:init" />
+<include file="Mobile:header" />
+<include file="Mobile:tl_header" />
+<div class="timeline user">
+<eq name="Think.ACTION_NAME" value="info">
+<?php
+	$big_avatar = strtr($avatar_url, array('_normal.' => '_reasonably_small.'));
+	$raw_avatar = strtr($avatar_url, array('_normal.' => '.'));
+	$created_at = date('Y-m-d', strtotime($user->created_at) + $user->utc_offset);
+	$avg_number = round($user->statuses_count / ((time() - strtotime($user->created_at)) / 86400), 2);
+?>
+<div class="user_info">
+  <a href="{$raw_avatar}" class="profile-picture" target="_blank">
+    <img src="{$big_avatar}" alt="{$user:name}" class="avatar size128">
+  </a>
+  <div class="profile-card-inner">
+    <h1 class="fullname">{$user:name}</h1>
+    <h2 class="username"><span class="screen-name"><s>@</s><a href="__APP__/{$user:screen_name}">{$user:screen_name}</a></span></h2>
+    <p class="bio">{$user:description}</p>
+    <p class="location-and-url">
+      <span class="location">{$user:location}</span>
+      <span class="divider">·</span>
+      <span class="url">
+        <a target="_blank" rel="me nofollow" href="{$user:url}">{$user:url}</a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="user_action">
+	<neq name="user:screen_name" value="$myself_name">
+		<eq name="source:blocking" value="0">
+			<eq name="source:following" value="0">
+				<a class="btn" href="__APP__/{$user:screen_name}/followUser">关注</a>
+			<else />
+				<a class="btn btn-success" href="__APP__/{$user:screen_name}/unfoUser">取消关注</a>
+			</eq>
+		<else />
+			<a class="btn disabled">关注</a>
+		</eq>
+		<eq name="source:marked_spam" value="0">
+			<a class="btn" href="__APP__/{$user:screen_name}/reportSpam">报告垃圾信息</a>
+		<else />
+			<a class="btn disabled">已报告</a>
+		</eq>
+		<eq name="source:blocking" value="0">
+			<a class="btn" href="__APP__/{$user:screen_name}/block">屏蔽用户</a>
+		<else />
+			<a class="btn btn-danger" href="__APP__/{$user:screen_name}/unblock">解除屏蔽</a>
+		</eq>
+		<eq name="isProtected" value="0">
+			<eq name="source:want_retweets" value="0">
+				<a class="btn" href="__APP__/{$user:screen_name}/enableRetweet">开启转发功能</a>
+			<else />
+				<a class="btn" href="__APP__/{$user:screen_name}/disableRetweet">关闭转发功能</a>
+			</eq>
+		</eq>
+	<else />
+		<a class="btn btn-primary" href="">修改个人信息</a>
+	</neq>
+</div>
+<div class="user_info_list">
+	<ul>
+		<li><a href="__APP__/{$user:screen_name}">推文：<span>{$user:statuses_count}</span></a></li>
+		<li><a href="__APP__/{$user:screen_name}/favorites">收藏：<span>{$user:favourites_count}</span></a></li>
+	</ul>
+	<ul>
+		<li>正在关注：<span>{$user:friends_count}</span></li>
+		<li>关注者：<span>{$user:followers_count}</span></li>
+	</ul>
+	<ul>
+		<li>注册日期：<span>{$created_at}</span></li>
+		<li>平均日推：<span>{$avg_number}</span></li>
+	</ul>
+</div>
+<else />
+
+<div class="page_nav">{$page_show}</div>
+
+</eq>
+</div>
+
+<include file="Mobile:footer" />

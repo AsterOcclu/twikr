@@ -1,0 +1,115 @@
+<?php
+    $rt_status = 0;
+    $isRetweetByMe = $status->retweeted;
+    if (isset($status->retweeted_status)) {
+        $retweet_by = $status->user->screen_name;
+        if(isset($rts_by_me) && $rts_by_me) {
+            $source = $status->retweeted_status->source;
+        }
+        else {
+            $rt_status  = 1;
+            $source     = $status->source;
+        }
+        $status = $status->retweeted_status;
+        if ($retweet_by == session('screen_name')) {
+            $isRetweetByMe = true;
+        }
+        else {
+            $isRetweetByMe = $status->retweeted;
+        }
+    }
+    else {
+        $source = $status->source;
+    }
+    $user = $status->user;
+    $avatar_url = IS_HTTPS ? $user->profile_image_url_https : $user->profile_image_url;
+    if ($mini_avatar) $avatar_url = strtr($avatar_url, array('_normal.' => '_mini.'));
+    if (isset($translation)) {
+        $tweet_conent = format_entities($status->entities, $translation, $show_img, $show_url);
+        unset($translation);
+    }
+    else {
+        $tweet_conent = format_entities($status->entities, $status->text, $show_img, $show_url);
+    }
+    $text         = $tweet_conent['text'];
+    $urls         = $tweet_conent['urls'];
+    $isUrl        = $urls[0];
+    unset($urls[0]);
+    $media        = $tweet_conent['media'];
+    $isMedia      = $media[0];
+    unset($media[0]);
+    if ($fix_character) $text = fix_character($text);
+    if (MODULE_NAME == 'Status') {
+        $time = date('Y-m-d H:i:s', strtotime($status->created_at) + $user->utc_offset);
+    }
+    else {
+        $time = format_diff_time(strtotime($status->created_at));
+    }
+?>
+<div>
+  <a href="__APP__/{$user:screen_name}/info" target="_blank">
+    <img alt="{$user:name}" src="{$avatar_url}" class="size48" />
+  </a>
+</div>
+<div class="tweet_conent">
+  <span class="tweet_word">
+    <a class="tweet_author" href="__APP__/{$user:screen_name}">{$user:screen_name}</a>
+    <span class="tweet_text">&nbsp;{$text}</span>
+  </span>
+  <neq name="isUrl" value="0">
+  <div class="unshort_urls">
+    <volist name="urls" id="url">
+      <div class="single_unshort_url">
+        <img src="https://www.google.com/s2/favicons?domain_url={$url.expanded}" alt="favicon" align="AbsMiddle" />
+        <a href="{$url.expanded}" target="_blank">{$url.display}</a></span>
+      </div>
+    </volist>
+  </div>
+  </neq>
+  <neq name="isMedia" value="0">
+  <div class="media_perview">
+    <volist name="media" id="medium">
+      <img alt="medium" src="{$medium}" />
+    </volist>
+  </div>
+  </neq>
+  <span class="tweet_actions">
+    <eq name="isReplyAll" value="0">
+    <a class="replie_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/reply">回复</a>
+    <else />
+    <a class="replie_all_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/replyAll">回复全部</a>
+    </eq>
+    <a class="rt_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/quote">回推</a>
+    <eq name="user:screen_name" value="$myself_name">
+      <a class="delete_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/delete">删除</a>
+    <else />
+      <eq name="user:protected" value="0">
+        <eq name="isRetweetByMe" value="0">
+        <a class="retw_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/retweet">转发</a>
+        <else />
+        <a class="unrt_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/unrt">撤销转发</a>
+        </eq>
+      <else />
+        <a class="protected_btn">保护</a>
+      </eq>
+    </eq>
+    <eq name="status:favorited" value="0">
+      <a class="fav_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/favorite">收藏</a>
+    <else />
+      <a class="unfav_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/unfav">撤销收藏</a>
+    </eq>
+    <eq name="isHideTranslate" value="0">
+      <a class="trans_btn" href="__APP__/status/{$user:screen_name}/{$status:id_str}/translate">翻译</a>
+    </eq>
+  </span>
+</div>
+<div class="tweet_info">
+  <notempty name="status:in_reply_to_status_id_str">
+    <span class="reply_to"><a href="__APP__/status/{$status:in_reply_to_screen_name}/{$status:in_reply_to_status_id_str}">对 {$status:in_reply_to_screen_name} 的回复</a></span>
+  </notempty>
+  <eq name="rt_status" value="1">
+    <span class="retweet_by">由 <a href="__APP__/{$retweet_by}" target="_blank">{$retweet_by}</a> 转发</span>
+  </eq>
+  <span class="source">通过 {$source}</span>
+  <span class="time"><a href="__APP__/status/{$user:screen_name}/{$status:id_str}" target="_blank">{$time}</a></span>
+</div>

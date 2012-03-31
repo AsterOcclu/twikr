@@ -1,0 +1,63 @@
+<?php
+    if($isInbox) {
+    	$user = $message->sender;
+    }
+    else {
+    	$user = $message->recipient;
+    }
+    $avatar_url = IS_HTTPS ? $user->profile_image_url_https : $user->profile_image_url;
+    if ($mini_avatar) $avatar_url = strtr($avatar_url, array('_normal.' => '_mini.'));
+    $tweet_conent = format_entities($message->entities, $message->text, $show_img, $show_url);
+    $text         = $tweet_conent['text'];
+    $urls         = $tweet_conent['urls'];
+    $media        = $tweet_conent['media'];
+    $isUrl        = $urls[0];
+    $isMedia      = $media[0];
+    unset($urls[0]);
+    unset($media[0]);
+    if ($fix_character) $text = fix_character($text);
+    if (ACTION_NAME == 'showMessage') {
+        $time = date('Y-m-d H:i:s', strtotime($message->created_at) + $user->utc_offset);
+    }
+    else {
+        $time = format_diff_time(strtotime($message->created_at));
+    }
+?>
+<div>
+  <a href="__APP__/{$user:screen_name}/info" target="_blank">
+    <img class="size48" alt="{$user:name}" src="{$avatar_url}" />
+  </a>
+</div>
+<div class="tweet_conent">
+  <span class="tweet_word">
+    <a class="tweet_author" href="__APP__/{$user:screen_name}">{$user:screen_name}</a>
+    <span class="tweet_text">&nbsp;{$text}</span>
+  </span>
+  <neq name="isUrl" value="0">
+  <div class="unshort_urls">
+    <volist name="urls" id="url">
+      <div class="single_unshort_url">
+        <img src="https://www.google.com/s2/favicons?domain_url={$url.expanded}" alt="favicon" align="AbsMiddle" />
+        <a href="{$url.expanded}" target="_blank">{$url.display}</a></span>
+      </div>
+    </volist>
+  </div>
+  </neq>
+  <neq name="isMedia" value="0">
+  <div class="media_perview">
+    <volist name="media" id="medium">
+      <img alt="medium" src="{$medium}" />
+    </volist>
+  </div>
+  </neq>
+  <span class="tweet_actions">
+    <a class="replie_btn" href="__APP__/Message/{$message:id_str}/reply">回复</a>
+    <eq name="isInbox" value="0">
+    <a class="delete_btn" href="__APP__/Message/{$message:id_str}/delete">删除</a>
+	</eq>
+    <a class="trans_btn" href="__APP__/Message/{$message:id_str}/translate">翻译</a>
+  </span>
+</div>
+<div class="tweet_info">
+  <span class="time"><a href="__APP__/Message/{$message:id_str}" target="_blank">{$time}</a></span>
+</div>

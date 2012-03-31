@@ -1,0 +1,62 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+<present name="list_info">
+	<include file="Mobile:list_header" />
+</present>
+<include file="Mobile:tl_header" />
+<div class="timeline user_list">
+	<eq name="isProtected" value="0">
+	<div class="user_list_header">
+		<h2>{$user_list_header}</h2>	
+	</div>
+	<?php
+		$user_list = isset($user_list->users) ? $user_list->users : $user_list;
+		$isDeleteUser = isset($list_info) && $user->screen_name == $myself_name;
+	?>
+	<ol>
+		<volist name="user_list" id="user">
+			<?php
+				$avatar_url = IS_HTTPS ? $user->profile_image_url_https : $user->profile_image_url;
+			?>
+			<li>
+				<a href="__APP__/{$user:screen_name}">
+					<img class="size48" src="{$avatar_url}" alt="{$user:name}" />
+				</a>
+				<div class="user_content">
+					<div>
+						<span class="user_name"><a href="__APP__/{$user:screen_name}">{$user:name}</a></span>
+						<span class="user_screenname">(@{$user:screen_name})</span>
+						<eq name="Think.ACTION_NAME" value="blocking">
+							<a href="__APP__/{$user:screen_name}/unblock">[撤销屏蔽]</a>
+						</eq>
+						<eq name="user:following" value="0">
+							<a href="__APP__/{$user:screen_name}/followUser">[关注]</a>
+						<else />
+							<a href="__APP__/{$user:screen_name}/unfoUser">[取消关注]</a>
+						</eq>
+						<neq name="isDeleteUser" value="0">
+							<a href="__APP__/{$myself_name}/{$list_info:slug}/delMember?del_name={$user:screen_name}">[删除成员]</a>
+						</neq>
+					</div>
+					<div class="info_list">
+						<a href="__APP__/{$user:screen_name}/following">正在关注：{$user:friends_count}</a>
+						<a href="__APP__/{$user:screen_name}/followers">关注者：{$user:followers_count}</a>
+						<a href="__APP__/{$user:screen_name}">推文：{$user:statuses_count}</a>
+					</div>
+					<div>
+						<a class="bio_link" href="__APP__/{$user:screen_name}/info">简介</a> <span class="bio">{$user:description}</span>
+					</div>
+				</div>
+			</li>
+		</volist>
+	</ol>
+	<div class="page_nav">{$page_show}</div>
+	<else />
+		<div class="protected">
+			<h3>@{$user:screen_name} 的账号已被保护。</h3>
+			<p>只有经过 @{$user:screen_name} 确认的关注者才能访问其推文和完整个人资料。</p>
+		</div>
+	</eq>
+</div>
+
+<include file="Mobile:footer" />

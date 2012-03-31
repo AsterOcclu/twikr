@@ -1,0 +1,41 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+<?php
+	$show_user_header = isset($user) && $isProtected;
+	$screen_name = isset($user) ? "@$user->screen_name " : '对方';
+?>
+<neq name="show_user_header" value="0">
+	<include file="Mobile:user_header" />
+</neq>
+<include file="Mobile:form" />
+
+<div class="timeline_header">
+	<a href="__APP__">主页</a>
+	<a href="__APP__/replies">提及</a>
+	<a href="__APP__/favorites">收藏</a>
+	<a href="__APP__/retweet">转发</a>
+	<a href="__APP__/messages">私信</a>
+	<a href="__APP__/lists">列表</a>
+</div>
+<div class="status">
+	<neq name="isProtected" value="1">
+		<present name="isTranslate">
+			<div class="translate">
+				<h3>翻译至：{$to_lang}</h3>
+			<present name="translation">
+				<include file="Mobile:tweet" />
+				<div class="hr"></div>
+			</present>
+				<h3>原文：</h3>
+			</div>
+		</present>
+		<include file="Mobile:tweet" />
+	<else />
+	<div class="protected">
+		<h3>{$screen_name}的推文已被保护。</h3>
+		<p>只有经过{$screen_name}确认的关注者才能访问其推文和完整个人资料。</p>
+	</div>
+	</neq>
+</div>
+
+<include file="Mobile:footer" />

@@ -1,0 +1,38 @@
+</head>
+<body>
+<div class="main">
+<?php
+	$show_img         = !cookie('isHideImage') || MODULE_NAME == 'Status';
+	$show_url         = cookie('isRecoverUrl') || MODULE_NAME == 'Status';
+	$fix_character    = true; //tCookie('fix_character') != 'no' ? true : false;
+	$mini_avatar      = false; //tCookie('mini_avatar') == 'yes' ? true : false;
+	$myself_name      = session('screen_name');
+	$isProtected      = isset($isProtected) ? $isProtected : false;
+	$show_user_header = ACTION_NAME == 'info' ? false : true;
+	$show_form        = isset($show_form) ? $show_form : true;
+	$isMyself         = true;
+	if(isset($_GET['screen_name'])) {
+		$isMyself = (strcasecmp($_GET['screen_name'], session('screen_name')) == 0) ? true : false;
+	}
+	$isReplyAll       = (!cookie('isNoReplyAll') || ACTION_NAME == 'reply') && strtolower(ACTION_NAME) != 'replyall';
+	$isHideTranslate  = cookie('isHideTranslate') && MODULE_NAME != 'Status';
+?>
+<present name="tips">
+	<div class="tips {$tips.type}">
+		{$tips.text}
+	</div>
+</present>
+<div class="header">
+	<a href="__APP__" class="logo"><img src="__IMG__/twikr_logo2.png" alt="twikr" /></a>
+</div>
+<present name="error">
+	<div class="timeline">
+		<div class="error_page">
+			<h2>出现错误：{$error.header}</h3>
+			<p>{$error.content}</p>
+			<p><a href="__APP__">返回首页</a></p>
+		</div>
+	</div>
+	<include file="Mobile:footer" />
+	<?php return;?>
+</present>

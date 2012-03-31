@@ -1,0 +1,55 @@
+<div class="main_form">
+	<?php
+		$isMessage = false;
+		$action_name = strtolower(ACTION_NAME);
+		$module_name = strtolower(MODULE_NAME);
+		if($action_name == 'messages' || $module_name == 'message' || $action_name == 'sendmessage') {
+			$header_text = '私信';
+			$isMessage   = true;
+		}
+		elseif(($action_name == 'reply' || $action_name == 'replyall') && !$isProtected) {
+			$header_text = "回复给 $user->name";
+		}
+		elseif($action_name == 'quote' && !$isProtected) {
+			if (!cookie('isNoReplyQuote')) {
+				$header_text = "回复引用 $user->name 的推文";
+			}
+			else {
+				$header_text = "引用 $user->name 的推文";
+			}
+		}
+		elseif($module_name == 'user' && !$isMyself) {
+			$header_text = "给 $user->name 留言";
+			$sentText = "@$user->screen_name ";
+		}
+		else {
+			$header_text = '有什么新鲜事？';
+		}
+		$word_num = 140 - (isset($sentText) ? mb_strlen($sentText, 'utf-8') : 0);
+	?>
+	<div class="form_header">
+		<span class="tip_word">{$header_text}</span>
+		<span class="word_count">{$word_num}</span>
+	</div>
+	<neq name="isMessage" value="0">
+	<form action="__APP__/Message/send" method="post">
+		<span class="recipient">发送给： @</span><input name="recipienter" size="15" type="text" <present name="recipienter">value="{$recipienter}" </present>/>
+		<textarea class="main" name="status" rows="3" cols="44"></textarea>
+		<input type="submit" class="btn main" value="发送" />
+	</form>
+		<else />
+	<form action="__APP__/Status/update" method="post" enctype="multipart/form-data">
+		<textarea class="main" name="status" rows="3" cols="44"><present name="sentText">{$sentText}</present></textarea>
+		<notempty name="Think.get.sendImg">
+		<input type="file" name="image" />
+		<span class="send_img_help_text">小于2MB</span>
+		</notempty>
+		<input type="hidden" name="in_reply_to_id" value="<present name="sentInReplyTo">{$sentInReplyTo}</present>" />
+		<input type="submit" class="btn main" value="发送" />
+		<empty name="Think.get.sendImg">
+		<a href="?sendImg=yes" class="send_img_btn">推图</a>
+		</empty>
+	</form>
+	</neq>
+	<div class="clear"></div>
+</div>

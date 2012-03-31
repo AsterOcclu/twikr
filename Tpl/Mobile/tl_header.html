@@ -1,0 +1,77 @@
+<notpresent name="Think.get.screen_name">
+	<include file="Mobile:form" />
+	<div class="timeline_header">
+		<a <eq name="Think.ACTION_NAME" value="index">class="selected" </eq>href="__APP__">主页</a>
+		<a <eq name="Think.ACTION_NAME" value="replies">class="selected" </eq>href="__APP__/replies">提及</a>
+		<a <eq name="Think.ACTION_NAME" value="favorites">class="selected" </eq>href="__APP__/favorites">收藏</a>
+		<a <eq name="Think.ACTION_NAME" value="retweet">class="selected" </eq>href="__APP__/retweet">转发</a>
+		<a <eq name="Think.ACTION_NAME" value="messages">class="selected" </eq>href="__APP__/messages">私信</a>
+		<a <present name="isListModule">class="selected" </present>href="__APP__/lists">列表</a>
+	</div>
+	<else />
+	<include file="Mobile:user_header" />
+	<neq name="show_form" value="0">
+		<include file="Mobile:form" />
+	</neq>
+	<div class="timeline_header">
+		<a <eq name="Think.ACTION_NAME" value="index">class="selected" </eq>href="__APP__/{$screen_name}">推文</a>
+		<a <eq name="Think.ACTION_NAME" value="mentions">class="selected" </eq>href="__APP__/{$screen_name}/mentions">提及</a>
+		<eq name="isProtected" value="0">
+		<a <eq name="Think.ACTION_NAME" value="favorites">class="selected" </eq>href="__APP__/{$screen_name}/favorites">收藏</a>
+		<a <present name="isListModule">class="selected" </present>href="__APP__/{$screen_name}/lists">列表</a>
+		</eq>
+		<neq name="can_dm" value="0">
+			<a href="__APP__/{$screen_name}/sendMessage/">私信</a>
+			<a <eq name="Think.ACTION_NAME" value="info">class="selected" </eq>href="__APP__/{$screen_name}/info">简介</a>
+		<else />
+			<a <eq name="Think.ACTION_NAME" value="info">class="selected" </eq>href="__APP__/{$screen_name}/info">用户简介</a>
+		</neq>
+	</div>
+	<notpresent name="isListModule">
+		<div class="timeline_header_child">
+			<a <eq name="Think.ACTION_NAME" value="following">class="selected"</eq><eq name="isProtected" value="0">href="__APP__/{$screen_name}/following"</eq>>正在关注 {$user:friends_count}</a>|<a <eq name="Think.ACTION_NAME" value="followers">class="selected"</eq><eq name="isProtected" value="0">href="__APP__/{$screen_name}/followers"</eq>>被关注 {$user:followers_count}</a>
+		</div>
+	</notpresent>
+</notpresent>
+<present name="list_info">
+	<div class="timeline_header_child">
+		<a href="__APP__/{$screen_name}/{$list_info:slug}" <eq name="Think.MODULE_NAME" value="User">class="selected"</eq>>推文</a>
+		|
+		<a href="__APP__/{$screen_name}/{$list_info:slug}/members" <eq name="Think.ACTION_NAME" value="members">class="selected"</eq>>成员 {$list_info:member_count}</a>
+		|
+		<a href="__APP__/{$screen_name}/{$list_info:slug}/subscribers" <eq name="Think.ACTION_NAME" value="subscribers">class="selected"</eq>>订阅者 {$list_info:subscriber_count}</a>
+	</div>
+</present>
+<eq name="Think.ACTION_NAME" value="lists">
+	<eq name="isProtected" value="0">
+		<div class="timeline_header_child">
+			<a href="__APP__/{$screen_name}/lists" <eq name="Think.get.type" value="">class="selected"</eq>>全部</a>
+			|
+			<a href="__APP__/{$screen_name}/lists/following" <eq name="Think.get.type" value="following">class="selected"</eq>>订阅</a>
+			|
+			<a href="__APP__/{$screen_name}/lists/created" <eq name="Think.get.type" value="created">class="selected"</eq>>个人</a>
+			|
+			<a href="__APP__/{$screen_name}/lists/memberships" <eq name="Think.get.type" value="memberships">class="selected"</eq>>属于</a>
+			|
+			<a href="__APP__/lists/new" <eq name="Think.get.type" value="new">class="selected"</eq>>新建</a>
+		</div>
+	</eq>
+</eq>
+<eq name="Think.ACTION_NAME" value="retweet">
+<div class="timeline_header_child">
+	<a <present name="rts_by_me">class="selected" </present>href="__APP__/retweet">由我转发</a>
+	<a <eq name="Think.get.type" value="of_me">class="selected" </eq>href="__APP__/retweet/of_me">我被转发</a>
+	<a <eq name="Think.get.type" value="to_me">class="selected" </eq>href="__APP__/retweet/to_me">好友转发</a>
+</div>
+</eq>
+<eq name="Think.ACTION_NAME" value="messages">
+<div class="timeline_header_child">
+	<eq name="isInbox" value="1">
+	<span>发给你的私信</span>
+	<else />
+	<span>你发出的私信</span>
+	</eq>
+	<a <eq name="isInbox" value="1">class="selected" </eq>href="__APP__/messages">收件箱</a>
+	<a <eq name="isInbox" value="0">class="selected" </eq>href="__APP__/messages/sent">发件箱</a>
+</div>
+</eq>

@@ -1,0 +1,37 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+<present name="list_info">
+	<include file="Mobile:list_header" />
+</present>
+<include file="Mobile:tl_header" />
+<div class="timeline">
+<eq name="isProtected" value="0">
+	<ol>
+	<present name="statuses">
+	<volist name="statuses" id="status">
+
+	<li>
+	<include file="Mobile:tweet" />
+	</li>
+
+	</volist>
+	<else />
+	<volist name="messages" id="message">
+
+	<li>
+	<include file="Mobile:message" />
+	</li>
+
+	</volist>
+	</present>
+	</ol>
+
+	<div class="page_nav">{$page_show}</div>
+<else />
+	<div class="protected">
+		<h3>@{$user:screen_name} 的账号已被保护。</h3>
+		<p>只有经过 @{$user:screen_name} 确认的关注者才能访问其推文和完整个人资料。</p>
+	</div>
+</eq>
+</div>
+<include file="Mobile:footer" />

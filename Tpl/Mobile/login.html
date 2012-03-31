@@ -1,0 +1,64 @@
+<include file="Mobile:header" />
+<style>
+.big_logo{display:block;margin:20px auto;width:500px;height:100px;}
+.deny {color:#999;}
+.allow strong {color:#00b722;}
+.deny strong {color:#800;}
+.permissions {font-size:90%; margin: 10px;padding: 5;}
+.permissions li {list-style:disc inside;margin: 3px;}
+.oauth-step {padding:0.2em 0;}
+li.oauth-step {list-style-type:decimal;margin-left:1.3em;}
+.oauth-step input {border:1px solid #ace;padding:0.4em;}
+form{margin: 10px;}
+.buttons{margin: 20px 50px;}
+.login{margin: 0 auto;width:260px;}
+.mistake{width:120px;margin: 10px;padding: 10px;background-color: #FCF8E3;border: 1px solid #FBEED5;color: #C09853;}
+</style>
+</head>
+<body>
+<div class="main">
+	<div class="header">
+		<a href="__APP__">首页</a>
+		<a href="__APP__/about">关于</a>
+	</div>
+	<img class="big_logo" src="__IMG__/twikr_big_logo.png" alt="twikr" />
+	<div class="timeline_header">
+		<a>授权应用</a>
+	</div>
+	
+	<div class="timeline">
+		<div class="login">
+			<present name="isWrongPassword">
+				<div class="mistake">
+					用户名或密码错误
+				</div>
+			</present>
+			<div class="permissions allow">
+				<p>该应用程序<strong>将能够</strong>:</p>
+				<ul>
+					<li>从你的时间轴中阅读推文。</li>
+					<li>查看你关注的用户，并关注其他用户。</li>
+					<li>更新你的个人资料。</li>
+					<li>为你发布推文。</li>
+					<li>访问你的私信。</li>
+				</ul>
+			</div>
+			<div class="permissions deny">
+			  <p>该应用程序<strong>将不能</strong>:</p>
+			  <ul>
+				<li>查看你的 Twitter 密码。</li>
+			  </ul>
+			</div>
+			<form action="__APP__/Login/authorize" method="post">
+				<input name="authenticity_token" type="hidden" value="{$authenticity_token}" />
+				<input name="oauth_token" type="hidden" value="{$oauth_token}" />
+				<div class="oauth-step"><b>用户名或电子邮件地址</b></div>
+				<div class="oauth-step"><input class="text" name="session[username_or_email]" type="text" value="" /></div>
+				<div class="oauth-step"><b>密码</b></div>
+				<div class="oauth-step"><input class="password" name="session[password]" type="password" value="" /></div>
+				<div class="buttons"><input type="submit" class="btn" value="授权"/></div>
+			</form>
+		</div>
+	</div>
+</div>
+<include file="Mobile:footer" />
