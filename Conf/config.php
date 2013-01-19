@@ -1,13 +1,17 @@
 <?php
 
-define('IS_HTTPS', true);
-define('HOST_URL', 'https://twikr.us'); //您的根目录地址
-define('APP_URL', '/m');  //您的子目录地址，若使用根目录，则只填写"/"
+define('IS_HTTPS', false); //若您使用https模式，请设置为true
+define('HOST_URL', 'https://twitter.com'); //您的根目录地址
+define('APP_URL', '/'); //您的子目录地址，若使用根目录，则只填写"/"
 define('BASE_URL', HOST_URL.APP_URL);
+define('BASE_PATH', dirname(realpath('./index.php')));
+define('WHITE_LIST_ADMIN', '/BASE_PATH/white_list_admin.txt'); //保证文件可写
+define('WHITE_LIST_INVITE', '/BASE_PATH/white_list_invite.txt'); //保证文件可写
+define('STRANGER_LIST', '/BASE_PATH/stranger_list.txt'); //保证文件可写
 define('SECURE_KEY', 'twikr'); //请随意替换
 /* Twitter Lib Settings */
-define('CONSUMER_KEY', '');
-define('CONSUMER_SECRET', '');
+define('CONSUMER_KEY', ''); //请填写您的CONSUMER_KEY
+define('CONSUMER_SECRET', ''); //请填写您的CONSUMER_SECRET
 define('AUTHORIZE_URL', BASE_URL.'/Login/authorize');
 define('OAUTH_CALLBACK', BASE_URL.'/Login/callBack');
 
@@ -61,7 +65,7 @@ return array(
 	/* 路由设置 */
 	'URL_ROUTER_ON'        => true,
 	'URL_ROUTE_RULES'      => array(
-		'test'                                         => 'Index/test',
+		'invite'                                       => 'Index/invite',
 		'about'                                        => 'Index/about',
 		'settings'                                     => 'Index/settings',
 		'logout'                                       => 'Login/logout',
@@ -73,6 +77,7 @@ return array(
 		'embed/image/:key'                             => 'Index/imgProxy',
 		'/^(replies|favorites|fav|retweet|messages|profile|following|followers|lists)\/?(\w+)?/i' => 'User/:1?type=:2',
 		'/^(\w+)\/((?!lists(?:\/\w*)?$)[^\/]+)\/(\w+)/i' => 'List/:3?screen_name=:1&slug=:2',
+		'/index\/?(\w+)?\/?([^\/]+)?\/?(\w+)?/i'       => 'User/:1?screen_name=index&type=:2&slug=:1',
 		'/^((?!login|status|message(?:\/\w*)?$)\w+)\/?([^\/]+)?\/?(\w+)?/i'  => 'User/:2?screen_name=:1&type=:3&slug=:2',
 	),
 

@@ -3,6 +3,7 @@
 		<span class="left">
 			<a href="__APP__/search" <if condition="(ACTION_NAME eq 'search') OR (ACTION_NAME eq 'mentions') "> class="selected" </if>>搜索</a>
 			<a href="__APP__/settings" <eq name="Think.ACTION_NAME" value="settings">class="selected" </eq>>设置</a>
+			<a href="__APP__/invite" <eq name="Think.ACTION_NAME" value="invite">class="selected" </eq>>邀请</a>
 			<a href="__APP__/about" <eq name="Think.ACTION_NAME" value="about">class="selected" </eq>>关于</a>
 			<a href="__APP__/logout">登出</a>
 		</span>
@@ -21,7 +22,7 @@
 		?>
 		<div class="page_nav_footer">
 			{$page_show}
-			<span>© 2012 - DOOMSDAY 推客</span>
+			<span><a href="__APP__">© 2012 - DOOMSDAY 推客</a></span>
 		</div>
 		</present>
 	</div>

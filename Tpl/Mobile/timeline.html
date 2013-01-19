@@ -25,7 +25,12 @@
 	</volist>
 	</present>
 	</ol>
-
+	<?php
+		if(isset($page_show) && isset($max_id)) {
+			$page_show = preg_replace('/max_id=\\d+/', '', $page_show);
+			$page_show = preg_replace('/"next"(.+)&p=/', '"next"$1'."max_id=$max_id".'&p=', $page_show);
+		}
+	?>
 	<div class="page_nav">{$page_show}</div>
 <else />
 	<div class="protected">

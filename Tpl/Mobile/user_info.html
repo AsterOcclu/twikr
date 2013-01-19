@@ -15,7 +15,7 @@
   <div class="profile-card-inner">
     <h1 class="fullname">{$user:name}</h1>
     <h2 class="username"><span class="screen-name"><s>@</s><a href="__APP__/{$user:screen_name}">{$user:screen_name}</a></span></h2>
-    <p class="bio">{$user:description}</p>
+    <p class="bio">{$user:description|format_bio}</p>
     <p class="location-and-url">
       <span class="location">{$user:location}</span>
       <span class="divider">·</span>

@@ -22,7 +22,7 @@ class LoginAction extends CommonAction
         }
         else {
             session(null);
-            $this->toError('Login', '无法获取Token，HTTP编码不是200');
+            $this->toError('登录', '无法验证Token，可能是网络错误，请稍后重试');
             return false;
         }
     }
@@ -115,6 +115,17 @@ class LoginAction extends CommonAction
                 session('user_id', $access_token['user_id']);
                 session('screen_name', $access_token['screen_name']);
 
+                if (!verifyWhiteList($access_token['screen_name'])) {
+                    session(null);
+                    
+                    $stranger_list = unserialize(file_get_contents(STRANGER_LIST));
+                    $stranger_list = is_array($white_list_invite) ? $white_list_invite : array();
+                    $stranger_list[] = $access_token['screen_name'];
+                    file_put_contents(STRANGER_LIST, serialize($stranger_list));
+                    $this->toError('没有登录权限', '您似乎是陌生人呢。为了让这里长治久安，如果你是听从好友介绍来到这里，请让TA帮您申请登录许可。');
+                
+                }
+
                 tCookie('login_status', 'verified');
                 tCookie('oauth_token', $access_token['oauth_token']);
                 tCookie('oauth_token_secret', $access_token['oauth_token_secret']);
@@ -124,12 +135,12 @@ class LoginAction extends CommonAction
             }
             else {
                 session(null);
-                $this->toError('Login', '无法验证Token，HTTP编码不是200');   
+                $this->toError('登录', '无法验证Token，可能是网络错误，请稍后重试');
             }
         }
         else {
             session(null);
-            $this->toError('Login', '非法回调，回调参数与Session不符');
+            $this->toError('登录', '非法回调，回调参数与Session不符，请尝试重新登录');
         }
     }
 

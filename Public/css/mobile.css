@@ -38,18 +38,18 @@ input.main{float:right;}
 .tweet_info span{margin-left:5px;}
 .tweet_word{margin-right:10px;}
 .tweet_actions{margin:5px;}
-.tweet_actions a, .send_img_btn{margin-right:10px;display:inline-block;height:18px;width:22px;text-indent:-9999em;}
-.replie_btn{background:url("../img/icons10.jpg") no-repeat 0px 0px;}
-.rt_btn{background:url("../img/icons10.jpg") no-repeat -32px 0px;}
-.retw_btn{background:url("../img/icons10.jpg") no-repeat -71px 0px;}
-.fav_btn{background:url("../img/icons10.jpg") no-repeat -106px 0px;}
-.delete_btn{background:url("../img/icons10.jpg") no-repeat -142px 0px;}
-.trans_btn{background:url("../img/icons10.jpg") no-repeat -177px 0px;}
-.unrt_btn{background:url("../img/icons10.jpg") no-repeat -211px 0px;}
-.unfav_btn{background:url("../img/icons10.jpg") no-repeat -247px 0px;}
-.protected_btn{background:url("../img/icons10.jpg") no-repeat -282px 0px;}
-.replie_all_btn{background:url("../img/icons10.jpg") no-repeat -316px 0px;}
-.send_img_btn {background:url("../img/icons10.jpg") no-repeat -356px 0px;float:right;margin: 5px 15px 0 0;}
+.action_btn{background-image:url("../img/icons10.jpg");background-repeat:no-repeat}
+.replie_btn{background-position: 0px 0px;}
+.rt_btn{background-position: -32px 0px;}
+.retw_btn{background-position: -71px 0px;}
+.fav_btn{background-position: -106px 0px;}
+.delete_btn{background-position: -142px 0px;}
+.trans_btn{background-position: -177px 0px;}
+.unrt_btn{background-position: -211px 0px;}
+.unfav_btn{background-position: -247px 0px;}
+.protected_btn{background-position: -282px 0px;}
+.replie_all_btn{background-position: -316px 0px;}
+.send_img_btn {background-position: -356px 0px;float:right;margin: 5px 15px 0 0;}
 .page_nav {color:#999;height:20px;margin:20px 10px;}
 .page_nav_footer{margin:5px 15px 0 0;text-align: center;color:#FFF}
 .page_nav_footer span{text-align: center;}
@@ -168,3 +168,4 @@ h3.search_help {text-align: center;margin: 20px 0px;}
 .send_img_help_text{margin-left: 5px;color: #999;font-size: 11px;}
 .user_action{clear: both;}
 .save_settings {float:left;margin:0 10px 20px 30px;}
+.high_label{height: 60px}

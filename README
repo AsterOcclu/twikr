@@ -3,19 +3,19 @@
 +-------------------------------------------------------------------
 | A web client for twitter with PHP.                 
 +-------------------------------------------------------------------
-| 版本信息：Twikr 1.0 Release 2012/7/10                 
+| 版本信息：Twikr 1.3 Release 2013/1/20                 
 +-------------------------------------------------------------------
 | Copyright(c) 2012 http://water7it.com All rights reserved.
 +-------------------------------------------------------------------
 
 [ 简介 ]
 
-推客·Twikr 1.0（以下简称Twikr）是一个twitter的移动网页端，
-专门为那些并不先进的手机浏览器设计。您说您的手机浏览器不
-支持翻墙，不支持的JavaScript，甚至对CSS都支持不完全？没问
+推客·Twikr 1.3（以下简称Twikr）是一个twitter的移动网页端，
+反js设计，依然带来人性化的前端体验。您说您的手机浏览器不
+支持翻墙，不支持JavaScript，甚至打开复杂网页会卡死？没问
 题！奉承"简易却不简单"的原则，Twikr让您可以在任何不支持
-JavaScript的浏览器上使用完整的twitter功能并获得极佳的操作
-体验。
+JavaScript的浏览器上，节省您的流量和时间，享用完整的
+Twitter生活。(未来可能会相应开发JQuery Mobile版本)
 
 [ 特点 ]
 
@@ -23,21 +23,22 @@ JavaScript的浏览器上使用完整的twitter功能并获得极佳的操作
 无论您的手机能否翻墙，Twikr默认使用内置的代理预览图片，保证
 您能看到被墙的图片。目前除支持twitter官方pic.twitter.com外，
 还支持以下图床：
-		flickr.com (flic.kr)
-		hellotxt.com
-		img.ly
-		instagr.am
-		lockerz.com
-		moby.to
-		ow.ly
-		p.twipple.jp
-		picplz.com
-		pixiv.net (新增，R-18分级图片除外)
-		tweetphoto.com
-		twitgoo.com
-		twitpic.com
-		twitxr.com
-		yfrog.com
+        flickr.com (flic.kr)
+        hellotxt.com
+        img.ly
+        imgur.com (新增)
+        instagr.am
+        lockerz.com
+        moby.to
+        p.twipple.jp
+        picplz.com
+        pixiv.net (新增)
+        tweetphoto.com
+        twitgoo.com
+        twitpic.com
+        twitxr.com
+        worldcosplay.net (新增)
+        yfrog.com
 如果您的手机上网流量比较紧张，您可以在设定页面取消时间线自动
 预览图片功能～
 

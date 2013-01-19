@@ -51,11 +51,13 @@
   </div>
   </neq>
   <span class="tweet_actions">
-    <a class="replie_btn" href="__APP__/Message/{$message:id_str}/reply">回复</a>
+    <a class="replie_btn action_btn" href="__APP__/Message/{$message:id_str}/reply">回复</a>
     <eq name="isInbox" value="0">
-    <a class="delete_btn" href="__APP__/Message/{$message:id_str}/delete">删除</a>
-	</eq>
-    <a class="trans_btn" href="__APP__/Message/{$message:id_str}/translate">翻译</a>
+    <a class="delete_btn action_btn" href="__APP__/Message/{$message:id_str}/delete">删除</a>
+    </eq>
+    <eq name="isHideTranslate" value="0">
+    <a class="trans_btn action_btn" href="__APP__/Message/{$message:id_str}/translate">翻译</a>
+    </eq>
   </span>
 </div>
 <div class="tweet_info">

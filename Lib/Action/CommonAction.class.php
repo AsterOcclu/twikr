@@ -30,6 +30,15 @@ class CommonAction extends Action
      * 获取当前页数
      +----------------------------------------------------------
      */
+    protected function getMaxID() {
+        return (isset($_GET['max_id'])) ? $_GET['max_id'] : false;
+    }
+
+    /**
+     +----------------------------------------------------------
+     * 获取当前页数
+     +----------------------------------------------------------
+     */
     protected function getPage() {
         return (isset($_GET['p']) && (int)$_GET['p'] > 0) ? (int)$_GET['p'] : 1;
     }
@@ -96,11 +105,11 @@ class CommonAction extends Action
             $profile = $profile ? $profile : $t->verify(true);
             if($this->verifyData($profile)) {
                 $profile_array = array(
-                    'name' => $profile->name,
-                    'avatar_http' => $profile->profile_image_url,
+                    'name'         => $profile->name,
+                    'avatar_http'  => $profile->profile_image_url,
                     'avatar_https' => $profile->profile_image_url_https,
                     );
-                cookie('profile', serialize($profile_array));
+                cookie('profile', serialize($profile_array), 3600);
             }
         }
     }
@@ -140,66 +149,74 @@ class CommonAction extends Action
      * 验证数据
      +----------------------------------------------------------
      */
-     protected function verifyData($value) {
-         if (is_null($value)) {
-             $error = array(
-                 'id'      => 0,
-                 'header'  => '网络错误',
-                 'content' => '与Twitter的连接超时或无响应，可能是Twitter的超载鲸来袭，请耐心等待，稍后再试 ╮(╯_╰)╭',
-                 );
-             $this->view->assign('error', $error);
-             return false;
+    protected function verifyData($value) {
+        // dump($value);
+        if (is_null($value)) {
+            $error = array(
+                'id'      => 0,
+                'header'  => '网络错误',
+                'content' => '与Twitter的连接超时或无响应，可能是Twitter的超载鲸来袭，请耐心等待，稍后再试 ╮(╯_╰)╭',
+                );
+            $this->view->assign('error', $error);
+            return false;
          }
-         elseif (isset($value->error) || isset($value->errors)) {
-             $isProtected = false;
-             $error_msg   = isset($value->error) ? $value->error : $value->errors;
-             if (strpos($error_msg, 'not authenticate') > 0) {
-                 $error = array(
-                     'id'      => 1,
-                     'header'  => '授权过期或不可用',
-                     'content' => '记录在您Cookies的登录授权信息过期或不可用，<a href="'.__APP__.'/login">重新登录</a>后即可恢复。',
-                     );
-             }
-             elseif (strpos($error_msg, 'limit exceeded') > 0) {
-                 $error = array(
-                     'id'      => 2,
-                     'header'  => '达到API请求限制',
-                     'content' => '您每小时请求Twitter的次数超过了350次（或搜索请求超过150次），可以休息一会儿，稍后再试 ╮(╯_╰)╭',
-                     );
-             }
-             elseif (strpos($error_msg, 'ot authorized') > 0) {
-                 $error = array(
-                     'id'      => 3,
-                     'header'  => '受保护的用户',
-                     'content' => '只有经过对方确认的关注者才能访问其推文和完整个人资料 ╮(╯_╰)╭',
-                     );
-                 $isProtected = true;
-                 $this->view->assign('isProtected', true);
-             }
-             elseif (strpos($error_msg, 'ot found') > 0) {
-                 $error = array(
-                     'id'      => 4,
-                     'header'  => '找不到该用户或者推文',
-                     'content' => '如果确认地址无误，可能是对方更改了ID或者删除了原推文 ╮(╯_╰)╭',
-                     );
-             }
-             else {
-                 $error = array(
-                     'id'      => 10,
-                     'header'  => '未知错误',
-                     'content' => $error_msg,
-                     );
-             }
-             if(!$isProtected) {
-                 $this->view->assign('error', $error);
-             }
-             return false;
-         }
-         elseif (count($value) == 0) {
-             $this->view->assign('isEmpty', true);
-             return false;
-         }
-         else return true;
+        elseif (isset($value->error) || isset($value->errors)) {
+            $isProtected = false;
+            $error_msg   = isset($value->error) ? $value->error : $value->errors[0]->message;
+            if ((stripos($error_msg, 'Bad Authentication data') !== false) || (stripos($error_msg, 'not authenticate') !== false)) {
+                $error = array(
+                    'id'      => 1,
+                    'header'  => '授权过期或不可用',
+                    'content' => '记录在您Cookies的登录授权信息过期或不可用，<a href="'.__APP__.'/login">重新登录</a>后即可恢复。',
+                    );
+            }
+            elseif (stripos($error_msg, 'limit exceeded') !== false) {
+                $error = array(
+                    'id'      => 2,
+                    'header'  => '达到API请求限制',
+                    'content' => '您每小时请求Twitter的次数超过了350次（或搜索请求超过150次），可以休息一会儿，稍后再试 ╮(╯_╰)╭',
+                    );
+            }
+            elseif (stripos($error_msg, 'not authorized') !== false) {
+               $error = array(
+                   'id'      => 3,
+                   'header'  => '受保护的用户',
+                   'content' => '只有经过对方确认的关注者才能访问其推文和完整个人资料 ╮(╯_╰)╭',
+                    );
+                $isProtected = true;
+                $this->view->assign('isProtected', true);
+            }
+            elseif (stripos($error_msg, 'not found') !== false) {
+                $error = array(
+                    'id'      => 4,
+                    'header'  => '找不到该用户或者推文',
+                    'content' => '如果确认地址无误，可能是对方更改了ID或者删除了原推文 ╮(╯_╰)╭',
+                    );
+            }
+            elseif ((stripos($error_msg, 'internal error') !== false) || (stripos($error_msg, 'over capacity') !== false)) {
+                $error = array(
+                    'id'      => 5,
+                    'header'  => '网络错误',
+                    'content' => 'Twitter的超载鲸来啦，大家耐心等待下吧 ╮(╯_╰)╭',
+                    );
+            }
+            else {
+                $error = array(
+                    'id'      => 10,
+                    'header'  => '未知错误',
+                    'content' => $error_msg,
+                    );
+            }
+            if(!$isProtected) {
+                $this->view->assign('error', $error);
+            }
+            return false;
+        }
+        elseif (count($value) == 0) {
+            $this->view->assign('isEmpty', true);
+            return false;
+        }
+        else return true;
      }
 
 
@@ -208,8 +225,11 @@ class CommonAction extends Action
      * 注册模板变量
      +----------------------------------------------------------
      */
-    protected function assign($name, $value) {
-        if ($this->verifyData($value)) {
+    protected function assign($name, $value, $isVerify = false) {
+        if($isVerify) {
+            $this->view->assign($name, $value);
+        }
+        elseif ($this->verifyData($value)) {
             $this->view->assign($name, $value);
         }
     }
@@ -236,25 +256,26 @@ class CommonAction extends Action
             session('tips', null);
         }
         $this->display("$device:$name");
+        // dump(ACTION_NAME);dump(MODULE_NAME);
     }
 
-    /**
-     +----------------------------------------------------------
-     * 确认操作
-     +----------------------------------------------------------
-     */
-    protected function confirm() {
-        if (tCookie('confirm') == 'yes' && session('confirmed') !== true) {
-            $status = $this->getStatus();
-            session('confirmed', true);
-            $this->showTpl('status');
-            return false;
-        }
-        else {
-            session('confirmed', null);
-            return true;
-        }
-    }
+    // /**
+    //  +----------------------------------------------------------
+    //  * 确认操作
+    //  +----------------------------------------------------------
+    //  */
+    // protected function confirm() {
+    //     if (tCookie('confirm') == 'yes' && session('confirmed') !== true) {
+    //         $status = $this->getStatus();
+    //         session('confirmed', true);
+    //         $this->showTpl('status');
+    //         return false;
+    //     }
+    //     else {
+    //         session('confirmed', null);
+    //         return true;
+    //     }
+    // }
 
     /**
      +----------------------------------------------------------
@@ -300,11 +321,14 @@ class CommonAction extends Action
      * 转到错误页面
      +----------------------------------------------------------
      */
-    protected function toError($type, $info = false) {
-        dump($type);
-        dump($info);
+    protected function toError($error_header, $error_content) {
+        $error = array(
+            'header'  => $error_header,
+            'content' => $error_content,
+            );
+        $this->view->assign('error', $error);
+        $this->showTpl('timeline');
         exit;
-        //header('Location:'.BASE_URL);
     }
 
     /**

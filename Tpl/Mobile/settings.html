@@ -1,0 +1,70 @@
+<include file="Mobile:header" />
+<include file="Mobile:init" />
+
+<?php
+  $isNoReplyAll    = cookie('isNoReplyAll');
+  $isNoReplyQuote  = cookie('isNoReplyQuote');
+  $isHideImage   = cookie('isHideImage');
+  $isNoProxifyImg  = cookie('isNoProxifyImg');
+  $isHideTranslate = cookie('isHideTranslate');
+  $isRecoverUrl    = cookie('isRecoverUrl');
+  $redirectTo      = cookie('redirectTo');
+?>
+<div class="timeline_header">
+  <a href="__APP__">主页</a>
+  <a href="__APP__/replies">提及</a>
+  <a href="__APP__/favorites">收藏</a>
+  <a href="__APP__/retweet">转发</a>
+  <a href="__APP__/messages">私信</a>
+  <a <if condition="(ACTION_NAME eq 'lists') OR (MODULE_NAME eq 'List') "> class="selected" </if>href="__APP__/lists">列表</a>
+</div>
+<div class="timeline edit_info">
+<h2>更改设置</h2>
+<form method="POST" action="__APP__/settings">
+<div class="editor">
+  <div class="field">
+    <div>
+      <label>回复与转发</label>
+    </div>
+      <div><input type="checkbox" name="isReplyAll" <neq name="isNoReplyAll" value="1">checked="true"</neq> /> 回复所有人</div>
+      <div><input type="checkbox" name="isReplyQuote" <neq name="isNoReplyQuote" value="1">checked="true"</neq> /> 使用回复引用</div>
+  </div>
+  <div class="field">
+    <div>
+      <label>显示图片设定</label>
+    </div>
+      <div><input type="checkbox" name="isHideImage" <neq name="isHideImage" value="1">checked="true"</neq> /> 在时间线中显示推文图片</div>
+      <div><input type="checkbox" name="isProxifyImg" <neq name="isNoProxifyImg" value="1">checked="true"</neq> /> 使用内置代理显示图片</div>
+  </div>
+  <div class="field">
+    <div>
+      <label class="high_label">时间线设定</label>
+    </div>
+      <div><input type="checkbox" name="isHideTranslate" <eq name="isHideTranslate" value="1">checked="true"</eq> /> 隐藏『翻译』按钮</div>
+      <div><input type="checkbox" name="isRecoverUrl" <eq name="isRecoverUrl" value="1">checked="true"</eq> /> 在推文下方还原缩短地址 (默认在单条推文页面还原)</div>
+      <div><input type="checkbox" name="isHideActionBtn" <eq name="hide_action_btn" value="1">checked="true"</eq> /> 使用文字链接代替推文操作中的图标</div>
+  </div>
+  <div class="field">
+    <label for="redirectTo">操作后跳转到</label>
+    <div class="options">
+        <input class="radio" type="radio" name="redirectTo" value="prePage" <neq name="redirectTo" value="1">checked="true"</neq> />
+        前一页面
+      <br />
+        <input class="radio" type="radio" name="redirectTo" value="indexPage"  <eq name="redirectTo" value="1">checked="true"</eq>  />
+        首页
+    </div>
+  </div>
+</div>
+  <div class="editor-save">
+    <button class="btn save_settings btn-primary">保存更改</button>
+  </div>
+</form>
+<form method="POST" action="__APP__/settings">
+  <div class="editor-save">
+    <input type="hidden" name="_backup" value="settings">
+    <button class="btn">恢复初始设定</button>
+  </div>
+</form>
+</div>
+
+<include file="Mobile:footer" />

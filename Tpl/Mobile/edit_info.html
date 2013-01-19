@@ -125,6 +125,21 @@
 </div>
 </form>
 </present>
+<present name="isInvite">
+  <h2>邀请新的用户</h2>
+  <form method="POST" action="__APP__/invite">
+    <div class="editor">
+    <div class="field">
+      <label for="invite_user_name">用户名</label>
+      <input type="text" id="invite_user_name" name="invite_user_name" />
+      <span class="help-text">让您的朋友获得推客的使用权限，无需加@符号</span>
+    </div>
+    <div class="editor-save">
+      <button class="btn">提交</button>
+    </div>
+  </div>
+  </form>
+</present>
 </div>
 
 <include file="Mobile:footer" />

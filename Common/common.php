@@ -7,7 +7,7 @@ function isMobile() {
 }
 
 function tCookie($name, $value = null, $option = null) {
-    if($value) {
+    if(!is_null($value)) {
         $value = function_exists('mcrypt_module_open') ? encrypt($value) : $value;
         cookie($name, $value, $option);
     }
@@ -29,6 +29,20 @@ function isLogin() {
         return true;
     }
     return false;
+}
+
+function verifyWhiteList($screen_name) {
+    $white_list_admin  = unserialize(file_get_contents(WHITE_LIST_ADMIN));
+    $white_list_admin  = is_array($white_list_admin) ? $white_list_admin : array();
+    $white_list_invite = unserialize(file_get_contents(WHITE_LIST_INVITE));
+    $white_list_invite = is_array($white_list_invite) ? $white_list_invite : array();
+    $white_list        = array_merge($white_list_admin, $white_list_invite);
+    if (array_search($screen_name, $white_list) !== false) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 function format_diff_time($time) {
@@ -64,10 +78,24 @@ function fix_character($text, $array = array()) {
     return strtr ($text, $replacement);
 }
 
+function format_bio($bio) {
+    $patterns = array(
+        '/@(\w+)/',
+        '/(\w+\:\/\/)(\w+\.[\w\.\/\-%#\:\?=\&]+)/',
+        '/#([^\s,.。，<>]+)/u',
+        );
+    $replacements = array(
+        '<a href="'.__APP__.'/$1">@$1</a>',
+        '<a href="$1$2">$1$2</a>',
+        '<a href="'.__APP__.'/search?q=%23$1">#$1</a>',
+        );
+    return preg_replace($patterns, $replacements, $bio);
+}
+
 function find_medium($str) {
     $scheme = (IS_HTTPS && !cookie('proxify_img')) ? 'https://' : 'http://';
     $direct_url_reg  = '/^https?\:\/\/\S+\.(?:jpg|png|gif|bmp|jpeg)(?:\:\w+)?(?:[?#]\S*)?$/i';
-    $img_map_reg     = '/^https?\:\/\/(?:www\.)?(flic\.kr|flickr\.com|hellotxt\.com|img\.ly|instagr\.am|lockerz\.com|moby\.to|ow\.ly|p\.twipple\.jp|picplz\.com|pixiv\.net|plixi\.com|tweetphoto\.com|twitgoo\.com|twitpic\.com|twitxr\.com|yfrog\.com)\S*\/([\w-]+)\/?/i';
+    $img_map_reg     = '/^https?\:\/\/(?:www\.)?(flic\.kr|flickr\.com|hellotxt\.com|img\.ly|imgur\.com|instagr\.am|instagram\.com|lockerz\.com|moby\.to|p\.twipple\.jp|picplz\.com|pixiv\.net|plixi\.com|tweetphoto\.com|twitgoo\.com|twitpic\.com|twitxr\.com|worldcosplay\.net|yfrog\.com)\S*\/([\w-]+)\/?/i';
     $twitter_map_reg = '/^https?\:\/\/(?:www\.)?twitter.com\/\S+\/status\/(\d+)\/photo\/(\d+)\/?$/i';
     if(preg_match($direct_url_reg, $str)) {
         return $str;
@@ -97,7 +125,11 @@ function find_medium($str) {
             case 'img.ly':
                 $url = 'http://'.$out[1].'/show/large/'.$out[2];
                 break;
+            case 'imgur.com':
+                $url = 'http://i.'.$out[1].'/'.$out[2].'.jpg';
+                break;
             case 'instagr.am':
+            case 'instagram.com':
                 if($out[2] != 'media') {
                     $url = $scheme.$out[1].'/p/'.$out[2].'/media/?size=m';   
                 }
@@ -112,9 +144,9 @@ function find_medium($str) {
             case 'moby.to':
                 $url = $scheme.'api.mobypicture.com?s=small&format=plain&k=OozRuDDauQlucrZ3&t='.$out[2];
                 break;
-            case 'ow.ly':
-                $url = $scheme.'static.'.$out[1].'/photos/thumb/'.$out[2].'.jpg';
-                break;
+            // case 'ow.ly':
+            //     $url = $scheme.'static.'.$out[1].'/photos/thumb/'.$out[2].'.jpg';
+            //     break;
             case 'p.twipple.jp':
                 $url = 'http://'.$out[1].'/show/large/'.$out[2];
                 break;
@@ -157,6 +189,14 @@ function find_medium($str) {
                     $url = $out[0];
                 }
                 break;
+            case 'worldcosplay.net':
+                $html = processCurl($str);
+                if(preg_match('/<div id="photo_container"><img src="(\S+)"/i', $html, $out)) {
+                    return $out[1];
+                }
+                else{
+                   return null; 
+                }
             case 'yfrog.com':
                 $url = 'http://'.$out[1].'/'.$out[2].':iphone';
                 break;
@@ -180,18 +220,6 @@ function find_medium($str) {
         return null;
     }
 }
-
-// function getPathName() {
-//     if(isset($_SERVER['PATH_INFO'])) {
-//         return strtolower(substr($_SERVER['PATH_INFO'], 1));
-//     }
-//     else {
-//         $pattern = '/^\/'.substr(__APP__, 1).'\/(\w*)[\/?&]?$/i';
-//         if(preg_match($pattern, $_SERVER['REQUEST_URI'], $match)) {
-//             return strtolower($match[1]);
-//         }
-//     }
-// }
 
 function format_entities($entities, $html, $show_img = true, $show_url = false) {
     $replacement   = array();
@@ -261,8 +289,13 @@ function format_entities($entities, $html, $show_img = true, $show_url = false) 
             }*/
         }
     }
+
+    $pattern = '/\$(\w+)/';
+    $replace = '<a target="_blank" href="'.$base_url.'/search?q=%24${1}">$${1}</a>';
+    $html = preg_replace ($pattern,$replace,$html);
+
     $tweet_conent = array(
-        'text'  => strtr($html,$replacement),
+        'text'  => nl2br(strtr($html,$replacement)),
         'urls'  => $expanded_urls,
         'media' => $medium_urls,
         );
@@ -322,6 +355,33 @@ function getEmbedImageUrl($url, $referer = false) {
         $url .= '&referer='.urlencode($referer);
     }
     return $url;
+}
+
+function getWhiteList($admins = array('AsterOcclu', 'jinamber')) {
+    $t          = getTwitter();
+    $white_list = array();
+    foreach ($admins as $admin) {
+        $cursor = -1;
+        while($cursor) {
+            $response = $t->friends($admin, $cursor);
+            if (isset($response->users)) {
+                $users = $response->users;
+                foreach ($users as $user) {
+                    $white_list[] = $user->screen_name;
+                }
+            }
+            else {
+                break;
+            }
+            if (isset($response->next_cursor_str)) {
+                $cursor = $response->next_cursor_str;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    file_put_contents(WHITE_LIST_ADMIN, serialize(array_unique($white_list)));
 }
 
 function setCurlHeader($isMobile = false) {
@@ -409,12 +469,12 @@ function base58_decode($num) {
 }
 
 function setMd5Key($plain_text) {
-    $salt = defined(SECURE_KEY) ?  SECURE_KEY : '120e319b20b9577593e1413093128bd5';
+    $salt = defined('SECURE_KEY') ?  'SECURE_KEY' : '120e319b20b9577593e1413093128bd5';
     return substr(md5($salt.$plain_text.$salt), 0, 6);
 }
 
 function encrypt($plain_text) {
-    $key = defined(SECURE_KEY) ?  SECURE_KEY : '120e319b20b9577593e1413093128bd5';
+    $key = defined('SECURE_KEY') ?  'SECURE_KEY' : '120e319b20b9577593e1413093128bd5';
     $td = mcrypt_module_open('blowfish', '', 'cfb', '');
     $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
     mcrypt_generic_init($td, $key, $iv);
@@ -424,7 +484,7 @@ function encrypt($plain_text) {
 }
 
 function decrypt($crypt_text) {
-    $key = defined(SECURE_KEY) ?  SECURE_KEY : '120e319b20b9577593e1413093128bd5';
+    $key = defined('SECURE_KEY') ?  'SECURE_KEY' : '120e319b20b9577593e1413093128bd5';
     $crypt_text = base64_decode($crypt_text);
     $td = mcrypt_module_open('blowfish', '', 'cfb', '');
     $ivsize = mcrypt_enc_get_iv_size($td);

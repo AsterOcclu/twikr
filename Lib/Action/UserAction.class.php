@@ -7,7 +7,7 @@ class UserAction extends CommonAction {
     function __construct() {
         parent::__construct();
         $this->screen_name = isset($_GET['screen_name']) ? $_GET['screen_name'] : session('screen_name');
-        $this->assign('screen_name', $this->screen_name);   
+        $this->assign('screen_name', $this->screen_name);
     }
 
     public function index() {
@@ -27,6 +27,7 @@ class UserAction extends CommonAction {
                     $tips[0] = true;
                     $tips[1] = '修改头像成功 ';
                     $profile = $response;
+                    session('isRefreshProfile', null);
                     $this->setProfileCookie($profile, true);
                 }
                 else {

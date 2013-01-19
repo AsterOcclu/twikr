@@ -19,6 +19,8 @@ class TwitterOAuth {
     public $url;
     /* Set up the API root URL. */
     public $host = "http://api.twitter.com/1/";
+    /* Set up the Privte API root URL. */
+    public $privte_api_host = "http://api.twitter.com/i/";
     /* Set timeout default. */
     public $timeout = 30;
     /* Set connect timeout. */

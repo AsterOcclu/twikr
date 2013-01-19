@@ -1,0 +1,86 @@
+<include file="Mobile:header" />
+<style>
+.header{width:588px;padding-left:20px;margin:0 auto;text-align:left;background-color:#8ec1da;margin:0 5px;padding:6px 0;-webkit-border-bottom-left-radius:5px;-webkit-border-bottom-right-radius:5px;-moz-border-radius-bottomleft:5px;-moz-border-radius-bottomright:5px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;}
+.header .selected{color:#333;background-color:white;padding:1px 4px 1px 4px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+.big_logo{display:block;margin:20px auto 20px auto;width:500px;height:100px;}
+.about{padding: 20px;background-color: white;border-top-left-radius:5px;border-top-right-radius:5px;width:550px;margin: 0 auto;position: relative;}
+.about p{text-indent:2em;line-height:1.5em}
+h2{margin: 15px 2px 10px 2px;}
+h3{margin: 15px 2px 8px 2px;}
+.about ul{margin: 10px 20px;}
+.about ul li{line-height:1.4em;font-size: 0.9em;color: #333;list-style:circle;}
+.author{margin: 20px;text-align: center;position: relative;left:200px}
+.author div{margin: 5px 0;}
+.thx{margin-top: 40px;}
+</style>
+</head>
+<body>
+<div class="main">
+<div class="index">
+  <div class="header">
+    <a href="__APP__">首页</a>
+    <a href="__APP__/about" class="selected">关于</a>
+  </div>
+  <img class="big_logo" src="__IMG__/twikr_big_logo.png" alt="twikr" />
+  <div class="about">
+  <p>推客·Twikr 1.3（以下简称Twikr）是一个twitter的移动网页端，
+反js设计，依然带来人性化的前端体验。您说您的手机浏览器不
+支持翻墙，不支持JavaScript，甚至打开复杂网页会卡死？没问
+题！奉承"简易却不简单"的原则，Twikr让您可以在任何不支持
+JavaScript的浏览器上，节省您的流量和时间，享用完整的
+Twitter生活。(未来可能会相应开发JQuery Mobile版本)</p>
+  <h2>Twikr的特点</h2>
+  <h3>1.支持预览推文图片（多图床支持）</h3>
+  <p>无论您的手机能否翻墙，Twikr默认使用内置的代理预览图片，保证您能看到被墙的图片。目前除支持twitter官方 <em>pic.twitter.com</em>外，还支持以下图床：
+    <ul>
+      <li>flickr.com (flic.kr)</li>
+      <li>hellotxt.com</li>
+      <li>img.ly</li>
+      <li>imgur.com (新增)</li>
+      <li>instagr.am</li>
+      <li>lockerz.com</li>
+      <li>moby.to</li>
+      <li><del>ow.ly</del></li>
+      <li>p.twipple.jp</li>
+      <li>picplz.com</li>
+      <li>pixiv.net (新增)</li> 
+      <li>tweetphoto.com</li>
+      <li>twitgoo.com</li>
+      <li>twitpic.com</li>
+      <li>twitxr.com</li>
+      <li>worldcosplay.net (新增)</li>
+      <li>yfrog.com</li>
+    </ul>
+    如果您的手机上网流量比较紧张，您可以在设定页面取消时间线自动预览图片功能～
+  </p>
+
+    <h3>2.支持全面的推文操作</h3>
+    <p>除官方的推文操作以外，还支持"回复全部"、"传统RT"、"回复转发"、"翻译"，同时支持在时间线直接『取消转发』已转发过的推文(少有客户端支持该功能)，由此可以大幅简化用户操作，减少额外的载入时间和网络流量。</p>
+
+    <h3>3.尽可能完整的twitter体验</h3>
+    <p>在使用twitter已开放的API范围内，提供尽可能完整的twitter功能。比如修改用户资料，修改用户头像，在推文中上传图片（官方图床），列表，搜索，DM，以及查看已屏蔽、好友请求列表等小众功能。</p>
+
+    <h3>4.简单且明晰的URL地址</h3>
+    <p>尽管Twikr的功能比较多，但URL却十分简单。基本遵循 <em>~/SCREEN_NAME/ACTION</em> 或者 <em>~/Status/STATUS_ID/ACTION</em> 这种官网规则，逻辑清晰。</p>
+
+    <h3>5.安全与穿墙能力</h3>
+    <p>Twikr支持部署在https环境下，并全局使用https资源，比如外部头像和推文图片，保证您不会暴露cookies和referer。而重新编写的登录模块，同时支持OAuth登录和模拟XAuth登录两种模式，完美解决之前联通3G拦截敏感信息导致无法登录的问题。</p>
+
+    <h3>6.详尽的错误提示</h3>
+    <p>Twikr会根据API返回的数据显示不同的错误提示，比如加锁（受保护）用户的权限问题、网络问题、请求API到达限制等等，
+      尽量消除程序本身的bug。</p>
+
+    <div class="thx">
+      <h2>感谢</h2>
+      
+      <p>Twikr由PHP语言编写，使用了<a target="_blank" href="http://thinkphp.cn/">ThinkPHP框架</a>，感谢ThinkPHP团队让我能把更多的精力放在完善Twikr本身的细节上。</p>
+      <p>感谢Abraham Williams编写的Twitter API类库<a target="_blank" href="https://github.com/abraham/twitteroauth">TwitterOAuth</a>，以及远在此之前那些优秀的Twitter项目，比如twitese。</p>
+      <p>最后感谢一直在使用并测试的许多朋友，和我那使用过了三年的诺基亚低端手机，你们是促使这个项目完成的源动力。</p>
+    </div>
+    <div class="author">
+      <a href="__APP__/AsterOcclu">@AsterOcclu</a>
+      <div>2012.07.10</div>
+    </div>
+</div>
+</div>
+<include file="Mobile:footer" />

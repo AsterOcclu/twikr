@@ -6,6 +6,19 @@ require_once('TwitterOAuth.php');
 class TwitterAPI extends TwitterOAuth {
 	/**
 	+----------------------------------------------------------
+	* ---------- Activity ----------
+	+----------------------------------------------------------
+	*/
+	function aboutMe($cursor = false) {
+		$url                  = $this->privte_api_host.'activity/about_me.'.$this->format;
+		// $args['count']        = 10;
+		// $args['since_id']     = 10;
+		// $args['max_position'] = 5;
+		return $this->get($url, $args);
+	}
+
+	/**
+	+----------------------------------------------------------
 	* ---------- Block ----------
 	+----------------------------------------------------------
 	*/
@@ -491,13 +504,13 @@ class TwitterAPI extends TwitterOAuth {
 		return $this->delete($url);
 	}
 
-	function homeTimeline($page = false, $since_id = false, $count = false, $include_entities = true) {
+	function homeTimeline($page = false, $max_id = false, $count = false, $include_entities = true) {
 		$url  = 'statuses/home_timeline';
 		$args = array();
-		if($page)
+		if(!$max_id && $page)
 			$args['page'] = $page;
-		if($since_id)
-			$args['since_id'] = $since_id;
+		if($max_id)
+			$args['max_id'] = $max_id;
 		if($count)
 			$args['count'] = $count;
 		if($include_entities)

@@ -2,7 +2,6 @@
 /**
  *
  * @author AsterOcclu
- * @version r001
  * @email asterocclu@gmail.com
  * @website http://water7it.com
  */

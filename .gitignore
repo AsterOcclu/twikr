@@ -9,7 +9,7 @@
 *.vi
 *~
 *.sass-cache
-*.json
+sftp-config.json
 
 # OS or Editor folders
 .DS_Store

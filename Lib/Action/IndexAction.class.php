@@ -2,22 +2,52 @@
 
 class IndexAction extends CommonAction {
 
-    public function test() {
-        header('location:'.__APP__);
-        // $url = 'http://www.pixiv.net/member_illust.php?illust_id=27442703&mode=medium';
-        // $html = processCurl($url);
-        // if(preg_match('/<meta property="og:image" content="(\S+)(?:\w)(\.\w+)">/i', $html, $out) && count($out) == 3) {
-        //     $image_url = $out[1].'m'.$out[2];
-        //     dump($image_url);
-        // }
+    public function invite() {
+        if (!isset($_POST['invite_user_name'])) {
+            $this->assign('isInvite', true);
+            $this->showTpl('edit_info');
+        }
+        elseif (!preg_match('/^\w+$/', $_POST['invite_user_name'])){
+            $this->setTips('您提交的用户名不合法', 'error');
+            $this->doRedirect();
+        }
+        else {
+            $white_list_admin  = unserialize(file_get_contents(WHITE_LIST_ADMIN));
+            $white_list_admin  = is_array($white_list_admin) ? $white_list_admin : array();
+            $white_list_invite = unserialize(file_get_contents(WHITE_LIST_INVITE));
+            $white_list_invite = is_array($white_list_invite) ? $white_list_invite : array();
+            $white_list        = array_merge($white_list_admin, $white_list_invite);
+            if (array_search($_POST['invite_user_name'], $white_list) === false) { 
+                $white_list_invite[] = $_POST['invite_user_name'];
+                file_put_contents(WHITE_LIST_INVITE, serialize($white_list_invite));
+                $this->setTips('邀请成功！');
+            }
+            else {
+                $this->setTips('您邀请的用户已在白名单之列', 'warning');
+            }
+            $this->doRedirect();
+        }
     }
 
     public function index() {
+        $max_id   = $this->getMaxID();
         $page     = $this->getPage();
         $t        = getTwitter();
-        $statuses = $t->homeTimeline($page);
-        $this->assign('statuses', $statuses);
-        $this->setPageNav(null, count($statuses));
+        $statuses = $t->homeTimeline($page, $max_id, 21);
+        if (!session('isRefreshProfile')) {
+            $this->setProfileCookie(null, true);
+            session('isRefreshProfile', true);
+        }
+        if ($this->verifyData($statuses)) {
+            $last_status = $statuses[count($statuses) - 1];
+            if (isset($statuses[20])) {
+                unset($statuses[20]);
+            }
+            $this->assign('statuses', $statuses, true);
+            $max_id = $last_status->id_str;
+            $this->setPageNav(null, count($statuses));
+            $this->assign('max_id', $max_id, true);
+        }
         $this->showTpl('timeline');
     }
 
@@ -38,6 +68,7 @@ class IndexAction extends CommonAction {
                 cookie('isNoProxifyImg', null);
                 cookie('isHideTranslate', null);
                 cookie('isRecoverUrl', null);
+                cookie('isHideActionBtn', null);
                 cookie('redirectTo', null);
                 $this->setTips('恢复初始设定成功');
             }
@@ -77,6 +108,12 @@ class IndexAction extends CommonAction {
                 }
                 else {
                     cookie('isRecoverUrl', null);
+                }
+                if (isset($_POST['isHideActionBtn']) && $_POST['isHideActionBtn'] == 'on') {
+                    cookie('isHideActionBtn', true);
+                }
+                else {
+                    cookie('isHideActionBtn', null);
                 }
                 if ($_POST['redirectTo'] == 'indexPage') {
                     cookie('redirectTo', true);
